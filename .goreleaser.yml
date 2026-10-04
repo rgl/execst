@@ -1,0 +1,28 @@
+version: 2
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+    goamd64:
+      - v3
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s
+      - -w
+    mod_timestamp: '{{ .CommitTimestamp }}'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+release:
+  draft: false
+  prerelease: auto
+checksum:
+  algorithm: sha256

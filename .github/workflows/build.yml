@@ -1,0 +1,31 @@
+name: Build
+on:
+  - push
+  - workflow_dispatch
+jobs:
+  build:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.27.1'
+      - name: Set up msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          install: make tar zip unzip
+          path-type: inherit
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: msys2 build.sh
+      - name: Archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts
+          path: |
+            dist/
+            !dist/*/*
